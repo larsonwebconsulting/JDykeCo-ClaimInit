@@ -1,5 +1,5 @@
 # JDykeCo-ClaimInit
-A office automation to simplify claim initiation for J. Dyke and Company
+An office automation to simplify claim initiation for J. Dyke and Company
 
 # Install Instructions
 1. Click "Download ZIP" in the right column of this page
