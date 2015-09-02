@@ -7,7 +7,6 @@
 . .\INI.ps1
 
 $ClaimInitConfig = Get-IniContent ".\ClaimInit.ini"
-$ClaimInitConfig["CONFIG"]["BASECLAIMFOLDER"]
 
 Function Initialize-Claim([String] $InsuredName, [String] $ClaimNumber, [DateTime] $DateOfLoss, [DateTime] $AssignmentDate) {
     $Script:InsuredName = $InsuredName
@@ -46,9 +45,10 @@ Function Create-ClaimFolder() {
 }
 
 Function Create-ClaimReminder() {
+	$olAppointmentItem = 1
     $outlookApplication = New-Object -ComObject 'Outlook.Application'
     #$outlookCalendar = $outlookApplication.Session.Folders.Item(4).Folders.Item(1)
-    $newCalenderItem = $outlookApplication.CreateItem('olAppointmentItem')
+    $newCalenderItem = $outlookApplication.CreateItem($olAppointmentItem)
 
     $newCalenderItem.Start = $Script:AssignmentDate.AddDays(7)
     $newCalenderItem.AllDayEvent = $True 
