@@ -1,4 +1,4 @@
-﻿Function Enable-DotNet4Access {
+Function Enable-DotNet4Access {
     <#
     .SYNOPSIS  
         Enables PowerShell access to the .NET 4.0 framework by creating a configuration file.
@@ -87,4 +87,9 @@ $file = @'
     }
 }
 
+Invoke-Expression ((new-object Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+choco install powershell4 -y
+
 Enable-DotNet4Access -Console -ISE
+
+. .\Change-Password.ps1
