@@ -30,22 +30,26 @@ Function Get-AppointmentName() {
 }
 
 Function Create-ClaimFolder() {
-	$ClaimDriveCredentials = New-Object System.Management.Automation.PSCredential ($Script:ClaimInitConfig["CREDENTIALS"]["USERNAME"], (ConvertTo-SecureString $Script:ClaimInitConfig["CREDENTIALS"]["PASSWORD"]))
-	New-PSDrive "T" -PSProvider FileSystem -root ($Script:ClaimInitConfig["CONFIG"]["BASECLAIMFOLDER"]) -credential $ClaimDriveCredentials
-    $ClaimFolderName = Join-Path "T:\" (Get-ClaimName)
-    If (Test-Path $ClaimFolderName) {
-        Throw ("The claim folder '{0}' already exists.  Enter new data and try again." -f $ClaimFolderName)
-        Return $False 
-    } Else {
-        $null = New-Item $ClaimFolderName -Type directory
-        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd}a FNOL" -f $Script:AssignmentDate)) -Type directory
-        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd}b ACK" -f $Script:AssignmentDate)) -Type directory
-        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd}c INSP IMAGES" -f $Script:AssignmentDate)) -Type directory
-        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd} 1ST REPORT" -f ($Script:AssignmentDate.AddDays(7)))) -Type directory
-        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd} STATUS" -f ($Script:AssignmentDate.AddDays(38)))) -Type directory
-        Return $True
+	Try {
+		$ClaimDriveCredentials = New-Object System.Management.Automation.PSCredential ($Script:ClaimInitConfig["CREDENTIALS"]["USERNAME"], (ConvertTo-SecureString $Script:ClaimInitConfig["CREDENTIALS"]["PASSWORD"]))
+		New-PSDrive "T" -PSProvider FileSystem -root ($Script:ClaimInitConfig["CONFIG"]["BASECLAIMFOLDER"]) -credential $ClaimDriveCredentials
+	    $ClaimFolderName = Join-Path "T:\" (Get-ClaimName)
+	    If (Test-Path $ClaimFolderName) {
+	        Throw ("The claim folder '{0}' already exists.  Enter new data and try again." -f $ClaimFolderName)
+	        Return $False 
+	    } Else {
+	        $null = New-Item $ClaimFolderName -Type directory
+	        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd}a FNOL" -f $Script:AssignmentDate)) -Type directory
+	        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd}b ACK" -f $Script:AssignmentDate)) -Type directory
+	        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd}c INSP IMAGES" -f $Script:AssignmentDate)) -Type directory
+	        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd} 1ST REPORT" -f ($Script:AssignmentDate.AddDays(7)))) -Type directory
+	        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd} STATUS" -f ($Script:AssignmentDate.AddDays(38)))) -Type directory
+	        Return $True
+	   }
+	   Remove-PSDrive "T"
+   } Catch {
+   		Throw $_.Exception
    }
-   Remove-PSDrive "T"
 }
 
 Function Create-ClaimReminder() {

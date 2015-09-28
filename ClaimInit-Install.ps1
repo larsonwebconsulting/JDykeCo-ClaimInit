@@ -87,8 +87,7 @@ $file = @'
     }
 }
 
-Invoke-Expression ((new-object Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-choco install powershell4 -y
+START http://boxstarter.org/package/powershell4
 
 Enable-DotNet4Access -Console -ISE
 
