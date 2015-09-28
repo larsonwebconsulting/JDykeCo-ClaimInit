@@ -1,4 +1,17 @@
+$PSScriptRoot = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
 [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") | Out-Null
+
+If (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+    Write-Host "Not running with administrative rights. Attempting to elevate..."
+    If (Test-Path (Join-Path $PSScriptRoot "debug.txt")) {
+    	$command = "-noexit"
+    } Else {
+    	$command = "-WindowStyle Hidden"
+    }
+    $command = "$command -STA -NoProfile -ExecutionPolicy bypass -command &'$PSScriptRoot\ClaimInitGUI.ps1'"
+    Start-Process powershell -verb runas -argumentlist $command
+    Exit
+}
 
 Function Show-MessageBox([String] $Message, [String] $Title = "Message", [Int] $BoxType = 0, [int] $Icon = 64) {
 	# 0:	OK
@@ -51,7 +64,7 @@ If ($IsSTAEnabled -eq $false) {
     Exit
 }
 
-. ./ClaimInit.ps1
+. (Join-Path $PSScriptRoot "ClaimInit.ps1")
 
 #ERASE ALL THIS AND PUT XAML BELOW between the @" "@ 
 $inputXML = @"
@@ -115,7 +128,7 @@ Get-FormVariables
 
 Function Clear-Values() {
 	$WPFdttmAssignmentDate.SelectedDate = Get-Date
-	$WPFdttmDateOfLoss.SelectedDate = $null
+	$WPFdttmDateOfLoss.Text = ""
 	$WPFtxtInsuredName.Text = ""
 	$WPFtxtClaimNumber.Text = ""
 }
