@@ -87,7 +87,7 @@ $file = @'
     }
 }
 
-START http://boxstarter.org/package/powershell4
+Start-Process http://boxstarter.org/package/powershell4
 
 Enable-DotNet4Access -Console -ISE
 

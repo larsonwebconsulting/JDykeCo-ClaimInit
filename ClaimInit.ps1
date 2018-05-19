@@ -19,6 +19,10 @@ Function Initialize-Claim([String] $InsuredName, [String] $ClaimNumber, [DateTim
 	Write-Host ("{0}|{1}|{2}|{3}" -f $Script:InsuredName, $Script:ClaimNumber, $Script:DateOfLoss, $Script:AssignmentDate)
 }
 
+Function Split-Name([String] $Name) {
+   Return $Name -split ", "
+}
+
 Function Get-ClaimName() {
     $Script:ClaimName = "{0}, {1}, {2:yyyyMMdd}" -f $Script:InsuredName, $Script:ClaimNumber, $Script:DateOfLoss
     Return $Script:ClaimName
@@ -39,11 +43,14 @@ Function Create-ClaimFolder() {
 	        Return $False 
 	    } Else {
 	        $null = New-Item $ClaimFolderName -Type directory
+	        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd} REFERENCE" -f $Script:AssignmentDate)) -Type directory
 	        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd}a FNOL" -f $Script:AssignmentDate)) -Type directory
 	        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd}b ACK" -f $Script:AssignmentDate)) -Type directory
 	        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd}c INSP IMAGES" -f $Script:AssignmentDate)) -Type directory
-	        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd} 1ST REPORT" -f ($Script:AssignmentDate.AddDays(7)))) -Type directory
-	        $null = New-Item (Join-Path $ClaimFolderName ("{0:yyyy.MM.dd} STATUS" -f ($Script:AssignmentDate.AddDays(38)))) -Type directory
+	        $null = New-Item (Join-Path $ClaimFolderName ("x{0:yyyy.MM.dd} 1ST RPT" -f ($Script:AssignmentDate.AddDays(7)))) -Type directory
+	        $null = New-Item (Join-Path $ClaimFolderName ("x{0:yyyy.MM.dd} 2ND RPT" -f ($Script:AssignmentDate.AddDays(30)))) -Type directory
+           $null = New-Item (Join-Path $ClaimFolderName ("x{0:yyyy.MM.dd} DIARY" -f ($Script:AssignmentDate.AddDays(40)))) -Type directory
+           $null = Copy-Item (Join-Path $PSScriptRoot "Template Notepad.docx") (Join-Path $ClaimFolderName ("01. {0} Notepad.docx" -f (Split-Name $Script:InsuredName)))
 	        Return $True
 	   }
 	   Remove-PSDrive "T"
