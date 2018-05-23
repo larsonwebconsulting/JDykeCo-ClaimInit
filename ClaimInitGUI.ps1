@@ -13,6 +13,27 @@ If (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     Exit
 }
 
+[String]$logFileName = "ClaimInit-" + (((Get-Date -Format o).Replace("T","-")).Replace(":","")).Substring(0,17) + ".log"
+[String]$logFile = (Join-Path (Join-Path $PSScriptRoot "Logs") $logFileName)
+
+<#
+	.SYNOPSIS
+		Enters an entry to the log file.
+	
+	.DESCRIPTION
+		Enters an entry to the log file.
+			Also write to the console.
+	
+	.PARAMETER LogEntry
+		[string] Entry to be entered.
+#>
+function Log-Entry ([String]$LogEntry) {
+	$LogEntry = $LogEntry.PadLeft($LogEntry.length)
+	[String]$LogEntry = ("{0}{1}{2}" -f (Get-Date).ToString("yyyy-MM-dd HH:mm:ss"), "`t", $LogEntry)
+	Write-Host $LogEntry
+	$LogEntry | Out-File -Filepath $logFile -append -encoding utf8
+}
+
 Function Show-MessageBox([String] $Message, [String] $Title = "Message", [Int] $BoxType = 0, [int] $Icon = 64) {
 	# 0:	OK
 	# 1:	OK Cancel
@@ -64,6 +85,10 @@ If ($IsSTAEnabled -eq $false) {
     Exit
 }
 
+Log-Entry "===================================="
+Log-Entry "= Starting ClaimInit Session"
+Log-Entry "===================================="
+
 . (Join-Path $PSScriptRoot "ClaimInit.ps1")
 
 #ERASE ALL THIS AND PUT XAML BELOW between the @" "@ 
@@ -101,7 +126,7 @@ try{
 
     $Form=[Windows.Markup.XamlReader]::Load( $reader )
 }catch{
-    Write-Host "Unable to load Windows.Markup.XamlReader. Double-check syntax and ensure .net is installed."
+    Log-Entry "Unable to load Windows.Markup.XamlReader. Double-check syntax and ensure .net is installed."
     $_.Exception
 }
  
@@ -109,7 +134,7 @@ try{
 # Load XAML Objects In PowerShell
 #===========================================================================
  
-$xaml.SelectNodes("//*[@Name]") | %{Set-Variable -Name "WPF$($_.Name)" -Value $Form.FindName($_.Name)}
+$xaml.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "WPF$($_.Name)" -Value $Form.FindName($_.Name)}
  
 Function Get-FormVariables{
 	If ($global:ReadmeDisplay -ne $true) {
@@ -138,16 +163,16 @@ $WPFbtnClear.Add_Click({
 })
  
 $WPFbtnOK.Add_Click({
-	Write-Host ("{0}|{1}|{2}|{3}" -f $WPFtxtInsuredName.Text, $WPFtxtClaimNumber.Text, $WPFdttmDateOfLoss.SelectedDate, $WPFdttmAssignmentDate.SelectedDate)
-    Initialize-Claim $WPFtxtInsuredName.Text $WPFtxtClaimNumber.Text $WPFdttmDateOfLoss.SelectedDate $WPFdttmAssignmentDate.SelectedDate
-    
-    Try {
-	    If ((Create-ClaimFolder) -And ($WPFchkCreateReminder.IsChecked)){
-	        Create-ClaimReminder
-	    }
-	} Catch {
-		Show-Error -Message $_.Exception.Message 
-	}
+   Initialize-Claim $WPFtxtInsuredName.Text $WPFtxtClaimNumber.Text $WPFdttmDateOfLoss.SelectedDate $WPFdttmAssignmentDate.SelectedDate
+
+   Try {
+      If ((Create-ClaimFolder) -And ($WPFchkCreateReminder.IsChecked)){
+         Create-ClaimReminder
+      }
+   } Catch {
+      Log-Entry ("ERROR:: {0}" -f $_.Exception.Message)
+      Show-Error -Message $_.Exception.Message 
+   }
 })
 
 $WPFbtnCancel.Add_Click({
@@ -156,6 +181,6 @@ $WPFbtnCancel.Add_Click({
 #===========================================================================
 # Shows the form
 #===========================================================================
-#write-host "To show the form, run the following" -ForegroundColor Cyan
+#Log-Entry "To show the form, run the following" -ForegroundColor Cyan
 Clear-Values
 $Form.ShowDialog() | Out-Null
