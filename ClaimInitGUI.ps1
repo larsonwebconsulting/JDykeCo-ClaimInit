@@ -96,9 +96,9 @@ $inputXML = @"
 <Window x:Class="jdykecoClaimGui.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         mc:Ignorable="d"
-        Title="J. Dyke &amp; Co. Claim Initiation" Height="223.77" Width="306.664" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+        Title="J. Dyke &amp; Co. Claim Initialization" Height="223.77" Width="306.664" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
     <Grid>
-        <Image x:Name="JDykeLogo_round_jpg" Source="C:\\jdcbot\\JDykeLogo.round.jpg" Stretch="Fill" Opacity="0.10"/>
+        <Image x:Name="JDykeLogo_round_jpg" Source=".\\JDykeLogo.round.jpg" Stretch="Fill" Opacity="0.10"/>
         <Label x:Name="lblInsuredName" Content="Insured Name:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblClaimNumber" Content="Claim Number:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblDateOfLoss" Content="Date of Loss:" HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top"/>
