@@ -34,9 +34,10 @@ Function Get-AppointmentName() {
 
 Function Create-ClaimFolder() {
     Try {
-        $ClaimDriveCredentials = New-Object System.Management.Automation.PSCredential ($Script:ClaimInitConfig["CREDENTIALS"]["USERNAME"], (ConvertTo-SecureString $Script:ClaimInitConfig["CREDENTIALS"]["PASSWORD"]))
-        New-PSDrive "T" -PSProvider FileSystem -root ($Script:ClaimInitConfig["CONFIG"]["BASECLAIMFOLDER"]) -credential $ClaimDriveCredentials
-        $ClaimFolderName = Join-Path "T:\" (Get-ClaimName)
+        #$ClaimDriveCredentials = New-Object System.Management.Automation.PSCredential ($Script:ClaimInitConfig["CREDENTIALS"]["USERNAME"], (ConvertTo-SecureString $Script:ClaimInitConfig["CREDENTIALS"]["PASSWORD"]))
+        #New-PSDrive "T" -PSProvider FileSystem -root ($Script:ClaimInitConfig["CONFIG"]["BASECLAIMFOLDER"]) -credential $ClaimDriveCredentials
+        #$ClaimFolderName = Join-Path "T:\" (Get-ClaimName)
+        $ClaimFolderName = Join-Path $Script:ClaimInitConfig["CONFIG"]["BASECLAIMFOLDER"] (Get-ClaimName)
         If (Test-Path $ClaimFolderName) {
             Throw ("The claim folder '{0}' already exists.  Enter new data and try again." -f $ClaimFolderName)
             Return $False 
@@ -54,7 +55,7 @@ Function Create-ClaimFolder() {
             Log-Entry "Created ECF folders and files successfully"
             Return $True
         }
-        Remove-PSDrive "T"
+        #Remove-PSDrive "T"
     } Catch {
             Throw $_.Exception
     }
