@@ -1,8 +1,8 @@
 # JDykeCo-ClaimInit
-An office automation to simplify claim initiation for J. Dyke and Company
+An office automation to simplify claim initialization for J. Dyke and Company LLC
 
 # Install Instructions
-1. Delete the folder C:\JDykeCo-ClaimInit-master if it exists
+1. Delete the folder C:\JDykeCo-ClaimInit if it exists
 2. Click "Download ZIP" in the right column of this page
 3. Open the .zip archive and copy the JDykeCo-ClaimInit-master folder to the root of your C: drive, making C:\JDykeCo-ClaimInit-master.  Overwrite any files that may aleady exist there.
 4. Open Windows Explorer and browse to the folder C:\JDykeCo-ClaimInit-master
