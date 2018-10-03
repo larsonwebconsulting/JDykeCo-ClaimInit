@@ -50,7 +50,7 @@ Function Create-ClaimFolder() {
             $null = New-Item (Join-Path $ClaimFolderName ("x{0:yyyy.MM.dd} 1ST RPT" -f ($Script:AssignmentDate.AddDays(7)))) -Type directory
             $null = New-Item (Join-Path $ClaimFolderName ("x{0:yyyy.MM.dd} 2ND RPT" -f ($Script:AssignmentDate.AddDays(30)))) -Type directory
             $null = New-Item (Join-Path $ClaimFolderName ("x{0:yyyy.MM.dd} DIARY" -f ($Script:AssignmentDate.AddDays(40)))) -Type directory
-            $null = Copy-Item (Join-Path $PSScriptRoot "Template Notepad.docx") (Join-Path $ClaimFolderName ("01. {0} Notepad.docx" -f (Split-Name $Script:InsuredName)))
+            $null = Copy-Item (Join-Path $PSScriptRoot "Template Notepad.docm") (Join-Path $ClaimFolderName ("01. {0} Notepad.docm" -f (Split-Name $Script:InsuredName)))
             Log-Entry "Created ECF folders and files successfully"
             Return $True
         }
