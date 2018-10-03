@@ -22,7 +22,7 @@ If (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 	
 	.DESCRIPTION
 		Enters an entry to the log file.
-			Also write to the console.
+		Also write to the console.
 	
 	.PARAMETER LogEntry
 		[string] Entry to be entered.
@@ -114,9 +114,9 @@ $inputXML = @"
     </Grid>
 </Window>
 "@   
- 
+
 $inputXML = $inputXML -replace 'mc:Ignorable="d"','' -replace "x:N",'N'  -replace '^<Win.*', '<Window'
- 
+
 try{
     [void][System.Reflection.Assembly]::LoadWithPartialName('presentationframework')
     [xml]$XAML = $inputXML
@@ -129,13 +129,12 @@ try{
     Log-Entry "Unable to load Windows.Markup.XamlReader. Double-check syntax and ensure .net is installed."
     $_.Exception
 }
- 
+
 #===========================================================================
 # Load XAML Objects In PowerShell
 #===========================================================================
- 
 $xaml.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "WPF$($_.Name)" -Value $Form.FindName($_.Name)}
- 
+
 Function Get-FormVariables{
 	If ($global:ReadmeDisplay -ne $true) {
 		Write-Host "If you need to reference this display again, run Get-FormVariables" -ForegroundColor Yellow
@@ -144,9 +143,9 @@ Function Get-FormVariables{
 	Write-Host "Found the following interactable elements from our form" -ForegroundColor Cyan
 	Get-Variable WPF*
 }
- 
+
 Get-FormVariables
- 
+
 #===========================================================================
 # Actually make the objects work
 #===========================================================================
@@ -161,18 +160,18 @@ Function Clear-Values() {
 $WPFbtnClear.Add_Click({
 	Clear-Values
 })
- 
-$WPFbtnOK.Add_Click({
-   Initialize-Claim $WPFtxtInsuredName.Text $WPFtxtClaimNumber.Text $WPFdttmDateOfLoss.SelectedDate $WPFdttmAssignmentDate.SelectedDate
 
-   Try {
-      If ((Create-ClaimFolder) -And ($WPFchkCreateReminder.IsChecked)){
-         Create-ClaimReminder
-      }
-   } Catch {
-      Log-Entry ("ERROR:: {0}" -f $_.Exception.Message)
-      Show-Error -Message $_.Exception.Message 
-   }
+$WPFbtnOK.Add_Click({
+    Initialize-Claim $WPFtxtInsuredName.Text $WPFtxtClaimNumber.Text $WPFdttmDateOfLoss.SelectedDate $WPFdttmAssignmentDate.SelectedDate
+
+    Try {
+        If ((Create-ClaimFolder) -And ($WPFchkCreateReminder.IsChecked)){
+            Create-ClaimReminder
+        }
+    } Catch {
+        Log-Entry ("ERROR:: {0}" -f $_.Exception.Message)
+        Show-Error -Message $_.Exception.Message 
+    }
 })
 
 $WPFbtnCancel.Add_Click({

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+    <metadata>
+        <id>claiminit</id>
+        <version>0.0.5</version>
+        <title>ClaimInit (Install)</title>
+        <authors>Eric Larson</authors>
+        <copyright>(c) 2018 Larson Web Consulting</copyright>
+        <tags>claiminit admin</tags>
+        <summary>Claim initialization automation software</summary>
+        <description>Claim initialization automation software</description>
+    </metadata>
+    <files>
+        <file src="..\**\*.*" target="content" exclude="..\Packaging\*.*;..\.*\**" />
+    </files>
+</package>
