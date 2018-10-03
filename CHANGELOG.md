@@ -1,5 +1,8 @@
+Claim Initialization Tool Changelog
+===================================
+
 Version 0.0.5
-=============
+-------------
 
 * New Folders
     * 'yyyy.mm.dd REFERENCE' where the date is the assignment date

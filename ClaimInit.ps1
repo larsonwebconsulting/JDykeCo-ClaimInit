@@ -34,9 +34,6 @@ Function Get-AppointmentName() {
 
 Function Create-ClaimFolder() {
     Try {
-        #$ClaimDriveCredentials = New-Object System.Management.Automation.PSCredential ($Script:ClaimInitConfig["CREDENTIALS"]["USERNAME"], (ConvertTo-SecureString $Script:ClaimInitConfig["CREDENTIALS"]["PASSWORD"]))
-        #New-PSDrive "T" -PSProvider FileSystem -root ($Script:ClaimInitConfig["CONFIG"]["BASECLAIMFOLDER"]) -credential $ClaimDriveCredentials
-        #$ClaimFolderName = Join-Path "T:\" (Get-ClaimName)
         $ClaimFolderName = Join-Path $Script:ClaimInitConfig["CONFIG"]["BASECLAIMFOLDER"] (Get-ClaimName)
         If (Test-Path $ClaimFolderName) {
             Throw ("The claim folder '{0}' already exists.  Enter new data and try again." -f $ClaimFolderName)
@@ -51,11 +48,10 @@ Function Create-ClaimFolder() {
             $null = New-Item (Join-Path $ClaimFolderName ("x{0:yyyy.MM.dd} 1ST RPT" -f ($Script:AssignmentDate.AddDays(7)))) -Type directory
             $null = New-Item (Join-Path $ClaimFolderName ("x{0:yyyy.MM.dd} 2ND RPT" -f ($Script:AssignmentDate.AddDays(30)))) -Type directory
             $null = New-Item (Join-Path $ClaimFolderName ("x{0:yyyy.MM.dd} DIARY" -f ($Script:AssignmentDate.AddDays(40)))) -Type directory
-            $null = Copy-Item (Join-Path $PSScriptRoot "Template Notepad.docm") (Join-Path $ClaimFolderName ("01. {0} Notepad.docm" -f (Split-Name $Script:InsuredName)))
+            $null = Copy-Item (Join-Path $PSScriptRoot "Template Notepad.docm") (Join-Path $ClaimFolderName (".01 {0} Notepad.docm" -f (Split-Name $Script:InsuredName)))
             Log-Entry "Created ECF folders and files successfully"
             Return $True
         }
-        #Remove-PSDrive "T"
     } Catch {
             Throw $_.Exception
     }
